@@ -50,6 +50,15 @@ export const Route = createFileRoute("/projects/$slug")({
   component: ProjectPage,
 });
 
+function toList(value: string[] | string | null | undefined): string[] {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  return value
+    .split("\n")
+    .map((line) => line.replace(/^[-•*]\s*/, "").trim())
+    .filter(Boolean);
+}
+
 function Block({ title, items }: { title: string; items: string[] }) {
   if (items.length === 0) return null;
   return (
@@ -148,9 +157,9 @@ function ProjectPage() {
         </section>
       ) : null}
 
-      <Block title="Key features" items={project.features ?? []} />
-      <Block title="Challenges" items={project.challenges ?? []} />
-      <Block title="Solutions" items={project.solutions ?? []} />
+      <Block title="Key features" items={toList(project.features)} />
+      <Block title="Challenges" items={toList(project.challenges)} />
+      <Block title="Solutions" items={toList(project.solutions)} />
 
       {project.technologies.length > 0 ? (
         <section className="mt-10">

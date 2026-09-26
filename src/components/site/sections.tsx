@@ -164,7 +164,7 @@ export function Hero({ data }: { data: SiteData }) {
   );
 }
 
-export function AboutSection({ data, section }: { data: SiteData; section?: Section }) {
+export function AboutSection({ data, section }: { data: SiteData; section?: Section | undefined }) {
   const { profile, aboutCards } = data;
   return (
     <SectionShell id="about" section={section} tone="paper">
@@ -201,7 +201,7 @@ export function AboutSection({ data, section }: { data: SiteData; section?: Sect
   );
 }
 
-export function EducationSection({ data, section }: { data: SiteData; section?: Section }) {
+export function EducationSection({ data, section }: { data: SiteData; section?: Section | undefined }) {
   if (data.education.length === 0) return null;
   return (
     <SectionShell id="education" section={section}>
@@ -259,7 +259,7 @@ export function EducationSection({ data, section }: { data: SiteData; section?: 
   );
 }
 
-export function SkillsSection({ data, section }: { data: SiteData; section?: Section }) {
+export function SkillsSection({ data, section }: { data: SiteData; section?: Section | undefined }) {
   const { skills, skillCategories } = data;
   if (skills.length === 0) return null;
 
@@ -326,7 +326,7 @@ export function SkillsSection({ data, section }: { data: SiteData; section?: Sec
   );
 }
 
-export function ExperienceSection({ data, section }: { data: SiteData; section?: Section }) {
+export function ExperienceSection({ data, section }: { data: SiteData; section?: Section | undefined }) {
   if (data.experience.length === 0) return null;
   return (
     <SectionShell id="experience" section={section}>
@@ -406,7 +406,7 @@ export function ExperienceSection({ data, section }: { data: SiteData; section?:
   );
 }
 
-export function ProjectsSection({ data, section }: { data: SiteData; section?: Section }) {
+export function ProjectsSection({ data, section }: { data: SiteData; section?: Section | undefined }) {
   if (data.projects.length === 0) return null;
   const ordered = [...data.projects].sort(
     (a, b) => Number(b.featured) - Number(a.featured) || a.sort_order - b.sort_order,
@@ -488,7 +488,7 @@ export function ProjectsSection({ data, section }: { data: SiteData; section?: S
   );
 }
 
-export function CertificationsSection({ data, section }: { data: SiteData; section?: Section }) {
+export function CertificationsSection({ data, section }: { data: SiteData; section?: Section | undefined }) {
   if (data.certifications.length === 0) return null;
   return (
     <SectionShell id="certifications" section={section}>
@@ -557,7 +557,7 @@ export function CertificationsSection({ data, section }: { data: SiteData; secti
   );
 }
 
-export function AchievementsSection({ data, section }: { data: SiteData; section?: Section }) {
+export function AchievementsSection({ data, section }: { data: SiteData; section?: Section | undefined }) {
   if (data.achievements.length === 0) return null;
   return (
     <SectionShell id="achievements" section={section} tone="paper">
@@ -605,7 +605,7 @@ export function AchievementsSection({ data, section }: { data: SiteData; section
   );
 }
 
-export function ServicesSection({ data, section }: { data: SiteData; section?: Section }) {
+export function ServicesSection({ data, section }: { data: SiteData; section?: Section | undefined }) {
   if (data.services.length === 0) return null;
   return (
     <SectionShell id="services" section={section}>
@@ -648,7 +648,7 @@ export function ServicesSection({ data, section }: { data: SiteData; section?: S
   );
 }
 
-export function ContactSection({ data, section }: { data: SiteData; section?: Section }) {
+export function ContactSection({ data, section }: { data: SiteData; section?: Section | undefined }) {
   const { contact } = data;
   return (
     <SectionShell id="contact" section={section} tone="paper">
