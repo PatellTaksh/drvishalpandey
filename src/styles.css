@@ -190,7 +190,7 @@
 }
 
 /* Scroll reveal, disabled for reduced-motion users */
-@utility reveal {
+.reveal {
   opacity: 0;
   transform: translateY(18px);
   transition:
@@ -198,7 +198,7 @@
     transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@utility reveal-in {
+.reveal.reveal-in {
   opacity: 1;
   transform: none;
 }
