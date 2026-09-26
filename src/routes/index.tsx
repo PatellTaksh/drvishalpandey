@@ -15,7 +15,7 @@ import {
   ServicesSection,
   SkillsSection,
 } from "@/components/site/sections";
-import type { SiteData } from "@/lib/portfolio.functions";
+import type { Section, SiteData } from "@/lib/portfolio.functions";
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(siteDataQuery),
@@ -53,7 +53,9 @@ function HomePage() {
   const enabled = (key: string) =>
     data.sections.length === 0 || data.sections.some((section) => section.key === key);
 
-  const blocks: Array<[string, (props: { data: SiteData; section?: ReturnType<typeof sectionFor> }) => JSX.Element | null]> = [
+  const blocks: Array<
+    [string, React.ComponentType<{ data: SiteData; section?: Section }>]
+  > = [
     ["about", AboutSection],
     ["education", EducationSection],
     ["skills", SkillsSection],
