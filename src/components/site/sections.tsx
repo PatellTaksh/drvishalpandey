@@ -30,7 +30,7 @@ export function SectionShell({
   tone = "default",
 }: {
   id: string;
-  section?: Section;
+  section?: Section | undefined;
   children: React.ReactNode;
   tone?: "default" | "paper";
 }) {

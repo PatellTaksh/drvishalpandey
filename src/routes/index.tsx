@@ -54,7 +54,7 @@ function HomePage() {
     data.sections.length === 0 || data.sections.some((section) => section.key === key);
 
   const blocks: Array<
-    [string, React.ComponentType<{ data: SiteData; section?: Section }>]
+    [string, React.ComponentType<{ data: SiteData; section?: Section | undefined }>]
   > = [
     ["about", AboutSection],
     ["education", EducationSection],
