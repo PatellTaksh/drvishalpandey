@@ -1,24 +1,99 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { siteDataQuery } from "@/lib/site-queries";
+import { SiteHeader } from "@/components/site/SiteHeader";
+import { SiteFooter } from "@/components/site/SiteFooter";
+import {
+  AboutSection,
+  AchievementsSection,
+  CertificationsSection,
+  ContactSection,
+  EducationSection,
+  ExperienceSection,
+  Hero,
+  ProjectsSection,
+  ServicesSection,
+  SkillsSection,
+} from "@/components/site/sections";
+import type { SiteData } from "@/lib/portfolio.functions";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  loader: ({ context }) => context.queryClient.ensureQueryData(siteDataQuery),
+  head: ({ loaderData }) => {
+    const settings = loaderData?.settings;
+    const profile = loaderData?.profile;
+    const title =
+      settings?.meta_title ||
+      (profile ? `${profile.full_name} — ${profile.professional_title ?? "Portfolio"}` : "Portfolio");
+    const description = settings?.meta_description || profile?.bio_short || "Personal portfolio.";
+    const image = settings?.og_image_url;
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: settings?.og_title || title },
+        { property: "og:description", content: settings?.og_description || description },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+        ...(image && image.startsWith("http")
+          ? [
+              { property: "og:image", content: image },
+              { name: "twitter:image", content: image },
+            ]
+          : []),
+      ],
+    };
+  },
+  component: HomePage,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function HomePage() {
+  const { data } = useSuspenseQuery(siteDataQuery);
+  const sectionFor = (key: string) => data.sections.find((section) => section.key === key);
+  const enabled = (key: string) =>
+    data.sections.length === 0 || data.sections.some((section) => section.key === key);
+
+  const blocks: Array<[string, (props: { data: SiteData; section?: ReturnType<typeof sectionFor> }) => JSX.Element | null]> = [
+    ["about", AboutSection],
+    ["education", EducationSection],
+    ["skills", SkillsSection],
+    ["experience", ExperienceSection],
+    ["projects", ProjectsSection],
+    ["certifications", CertificationsSection],
+    ["achievements", AchievementsSection],
+    ["services", ServicesSection],
+    ["contact", ContactSection],
+  ];
+
+  const ordered = data.sections.length
+    ? data.sections
+        .map((section) => blocks.find(([key]) => key === section.key))
+        .filter((entry): entry is (typeof blocks)[number] => Boolean(entry))
+    : blocks;
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
+    <>
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
+      >
+        Skip to content
+      </a>
+      <SiteHeader nav={data.nav} profile={data.profile} settings={data.settings} />
+      <main id="main">
+        {enabled("hero") ? <Hero data={data} /> : null}
+        {ordered.map(([key, Component]) => (
+          <Component key={key} data={data} section={sectionFor(key)} />
+        ))}
+      </main>
+      <SiteFooter
+        profile={data.profile}
+        settings={data.settings}
+        nav={data.nav}
+        socials={data.socials}
+        contact={data.contact}
+        resume={data.resume}
       />
-    </div>
+    </>
   );
 }
