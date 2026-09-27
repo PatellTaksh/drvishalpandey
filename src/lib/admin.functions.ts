@@ -55,7 +55,7 @@ export const listRows = createServerFn({ method: "GET" })
   .inputValidator((input: { table: AdminTable }) =>
     z.object({ table: tableSchema }).parse(input),
   )
-  .handler(async ({ data, context }): Promise<Record<string, unknown>[]> => {
+  .handler(async ({ data, context }): Promise<Record<string, any>[]> => {
     const supabase = context.supabase as any;
     await assertAdmin(supabase);
     const order = orderColumn(data.table);
@@ -78,7 +78,7 @@ export const saveRow = createServerFn({ method: "POST" })
       })
       .parse(input),
   )
-  .handler(async ({ data, context }): Promise<Record<string, unknown>> => {
+  .handler(async ({ data, context }): Promise<Record<string, any>> => {
     const supabase = context.supabase as any;
     await assertAdmin(supabase);
 
