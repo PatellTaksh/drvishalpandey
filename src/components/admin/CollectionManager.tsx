@@ -287,7 +287,6 @@ export function CollectionManager({ collection }: { collection: Collection }) {
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
-        </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
