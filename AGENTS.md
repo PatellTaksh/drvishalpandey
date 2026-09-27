@@ -8,3 +8,10 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- Public site content comes from Supabase via `src/lib/portfolio.functions.ts`; components never hardcode content so the admin stays the single source of truth.
+- All admin reads/writes go through `src/lib/admin.functions.ts` server functions that call `is_admin()` first, so the browser never gets privileged access.
+- Admin UI is generic: collections are declared in `src/lib/admin-collections.ts` and rendered by `CollectionManager`/`SingletonEditor`, so new content types need config only.
+- The `media` storage bucket is private; files are served through `src/routes/api/public/media/$.ts` so uploads never require a public bucket.
