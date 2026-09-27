@@ -147,8 +147,9 @@ export type DashboardStats = {
     name: string;
     email: string;
     subject: string | null;
+    message: string;
     created_at: string;
-    read: boolean;
+    is_read: boolean;
   }>;
 };
 
@@ -180,11 +181,11 @@ export const getDashboardStats = createServerFn({ method: "GET" })
     const { count: unread } = await supabase
       .from("contact_messages")
       .select("id", { count: "exact", head: true })
-      .eq("read", false);
+      .eq("is_read", false);
 
     const { data: recent } = await supabase
       .from("contact_messages")
-      .select("id,name,email,subject,created_at,read")
+      .select("id,name,email,subject,message,created_at,is_read")
       .order("created_at", { ascending: false })
       .limit(5);
 
