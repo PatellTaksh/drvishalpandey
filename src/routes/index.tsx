@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { socialMeta } from "@/lib/seo";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { siteDataQuery } from "@/lib/site-queries";
 import { SiteHeader } from "@/components/site/SiteHeader";

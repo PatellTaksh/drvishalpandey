@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { socialMeta } from "@/lib/seo";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeft, ExternalLink, Github } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
