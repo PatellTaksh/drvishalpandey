@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { socialMeta } from "@/lib/seo";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { siteDataQuery } from "@/lib/site-queries";
 import { SiteHeader } from "@/components/site/SiteHeader";
@@ -26,23 +27,22 @@ export const Route = createFileRoute("/")({
       settings?.meta_title ||
       (profile ? `${profile.full_name} — ${profile.professional_title ?? "Portfolio"}` : "Portfolio");
     const description = settings?.meta_description || profile?.bio_short || "Personal portfolio.";
-    const image = settings?.og_image_url;
-    return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: settings?.og_title || title },
-        { property: "og:description", content: settings?.og_description || description },
-        { property: "og:type", content: "website" },
-        { name: "twitter:card", content: "summary_large_image" },
-        ...(image && image.startsWith("http")
-          ? [
-              { property: "og:image", content: image },
-              { name: "twitter:image", content: image },
-            ]
-          : []),
-      ],
-    };
+    const seo = socialMeta({
+      title,
+      description,
+      path: "/",
+      type: "website",
+      siteName: settings?.site_name || profile?.full_name,
+      images: [settings?.og_image_url, profile?.avatar_url],
+    });
+    seo.meta = seo.meta.map((m) =>
+      "property" in m && m.property === "og:title" && settings?.og_title
+        ? { ...m, content: settings.og_title }
+        : "property" in m && m.property === "og:description" && settings?.og_description
+          ? { ...m, content: settings.og_description }
+          : m,
+    );
+    return seo;
   },
   component: HomePage,
 });

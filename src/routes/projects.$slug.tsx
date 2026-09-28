@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { socialMeta } from "@/lib/seo";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeft, ExternalLink, Github } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -15,26 +16,21 @@ export const Route = createFileRoute("/projects/$slug")({
     if (!loaderData?.project) {
       return { meta: [{ title: "Project not found" }, { name: "robots", content: "noindex" }] };
     }
-    const { project, settings } = loaderData;
-    const title = `${project.title} — ${settings?.site_name ?? "Portfolio"}`;
-    const description = project.short_description;
-    const image = project.thumbnail_url;
-    return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "article" },
-        { name: "twitter:card", content: "summary_large_image" },
-        ...(image && image.startsWith("http")
-          ? [
-              { property: "og:image", content: image },
-              { name: "twitter:image", content: image },
-            ]
-          : []),
+    const { project, settings, profile } = loaderData;
+    const siteName = settings?.site_name || profile?.full_name || "Portfolio";
+    return socialMeta({
+      title: `${project.title} — ${siteName}`,
+      description: project.short_description || settings?.meta_description || "",
+      path: `/projects/${project.slug}`,
+      type: "article",
+      siteName,
+      images: [
+        project.thumbnail_url,
+        ...(Array.isArray(project.images) ? project.images : []),
+        settings?.og_image_url,
+        profile?.avatar_url,
       ],
-    };
+    });
   },
   notFoundComponent: () => (
     <div className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-5 text-center">
