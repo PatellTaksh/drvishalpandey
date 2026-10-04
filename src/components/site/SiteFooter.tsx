@@ -82,10 +82,10 @@ export function SiteFooter({
                 </a>
               </li>
             ) : null}
-            {contact?.phone_visible && contact.phone ? (
+            {contact?.public_phone ? (
               <li>
-                <a className="transition-colors hover:text-primary" href={`tel:${contact.phone}`}>
-                  {contact.phone}
+                <a className="transition-colors hover:text-primary" href={`tel:${contact.public_phone}`}>
+                  {contact.public_phone}
                 </a>
               </li>
             ) : null}

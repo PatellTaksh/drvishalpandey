@@ -2,8 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import type { Tables } from "@/integrations/supabase/types";
 
-export type Profile = Tables<"profile">;
-export type SiteSettings = Tables<"site_settings">;
+export type Profile = Omit<Tables<"profile">, "phone">;
+export type SiteSettings = Omit<Tables<"site_settings">, "contact_email">;
 export type Section = Tables<"sections">;
 export type NavItem = Tables<"nav_items">;
 export type AboutCard = Tables<"about_cards">;
@@ -16,8 +16,15 @@ export type Certification = Tables<"certifications">;
 export type Achievement = Tables<"achievements">;
 export type Service = Tables<"services">;
 export type SocialLink = Tables<"social_links">;
-export type ContactInfo = Tables<"contact_info">;
+export type ContactInfo = Omit<Tables<"contact_info">, "phone">;
 export type Resume = Tables<"resumes">;
+
+const PROFILE_COLS =
+  "id,full_name,professional_title,tagline,bio_short,bio_long,avatar_url,email,location,website,availability,hero_primary_label,hero_primary_href,hero_primary_visible,hero_secondary_label,hero_secondary_href,hero_secondary_visible,hero_tertiary_label,hero_tertiary_href,hero_tertiary_visible,created_at,updated_at";
+const SETTINGS_COLS =
+  "id,site_name,logo_url,favicon_url,accent_color,default_theme,footer_text,copyright,meta_title,meta_description,og_title,og_description,og_image_url,canonical_url,created_at,updated_at";
+const CONTACT_COLS =
+  "id,email,email_visible,phone_visible,public_phone,location,location_visible,website,website_visible,note,created_at,updated_at";
 
 export type SiteData = {
   profile: Profile | null;
@@ -64,8 +71,8 @@ export const getSiteData = createServerFn({ method: "GET" }).handler(
       contact,
       resume,
     ] = await Promise.all([
-      db.from("profile").select("*").limit(1).maybeSingle(),
-      db.from("site_settings").select("*").limit(1).maybeSingle(),
+      db.from("profile").select(PROFILE_COLS).limit(1).maybeSingle(),
+      db.from("site_settings").select(SETTINGS_COLS).limit(1).maybeSingle(),
       db.from("sections").select("*").eq("enabled", true).order("sort_order"),
       db.from("nav_items").select("*").eq("enabled", true).order("sort_order"),
       db.from("about_cards").select("*").eq("visible", true).order("sort_order"),
@@ -78,13 +85,13 @@ export const getSiteData = createServerFn({ method: "GET" }).handler(
       db.from("achievements").select("*").eq("visible", true).order("sort_order"),
       db.from("services").select("*").eq("visible", true).order("sort_order"),
       db.from("social_links").select("*").eq("visible", true).order("sort_order"),
-      db.from("contact_info").select("*").limit(1).maybeSingle(),
+      db.from("contact_info").select(CONTACT_COLS).limit(1).maybeSingle(),
       db.from("resumes").select("*").eq("is_active", true).limit(1).maybeSingle(),
     ]);
 
     return {
-      profile: profile.data ?? null,
-      settings: settings.data ?? null,
+      profile: (profile.data as Profile | null) ?? null,
+      settings: (settings.data as SiteSettings | null) ?? null,
       sections: sections.data ?? [],
       nav: nav.data ?? [],
       aboutCards: visible(aboutCards.data),
@@ -97,7 +104,7 @@ export const getSiteData = createServerFn({ method: "GET" }).handler(
       achievements: visible(achievements.data),
       services: visible(services.data),
       socials: visible(socials.data),
-      contact: contact.data ?? null,
+      contact: (contact.data as ContactInfo | null) ?? null,
       resume: resume.data ?? null,
     };
   },
@@ -118,15 +125,15 @@ export const getProjectBySlug = createServerFn({ method: "GET" })
 
     const [project, settings, profile, socials] = await Promise.all([
       db.from("projects").select("*").eq("slug", data.slug).eq("visible", true).maybeSingle(),
-      db.from("site_settings").select("*").limit(1).maybeSingle(),
-      db.from("profile").select("*").limit(1).maybeSingle(),
+      db.from("site_settings").select(SETTINGS_COLS).limit(1).maybeSingle(),
+      db.from("profile").select(PROFILE_COLS).limit(1).maybeSingle(),
       db.from("social_links").select("*").eq("visible", true).order("sort_order"),
     ]);
 
     return {
       project: project.data ?? null,
-      settings: settings.data ?? null,
-      profile: profile.data ?? null,
+      settings: (settings.data as SiteSettings | null) ?? null,
+      profile: (profile.data as Profile | null) ?? null,
       socials: socials.data ?? [],
     };
   });
