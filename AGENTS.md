@@ -15,3 +15,4 @@
 - All admin reads/writes go through `src/lib/admin.functions.ts` server functions that call `is_admin()` first, so the browser never gets privileged access.
 - Admin UI is generic: collections are declared in `src/lib/admin-collections.ts` and rendered by `CollectionManager`/`SingletonEditor`, so new content types need config only.
 - The `media` storage bucket is private; files are served through `src/routes/api/public/media/$.ts` so uploads never require a public bucket.
+- Public reads of profile/site_settings/contact_info use explicit column lists (anon has column-level grants; phone/contact_email hidden, contact phone exposed via generated `public_phone`) so private fields never leave the database.
