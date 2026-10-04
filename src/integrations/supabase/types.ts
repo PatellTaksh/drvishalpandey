@@ -178,6 +178,7 @@ export type Database = {
           note: string | null
           phone: string | null
           phone_visible: boolean
+          public_phone: string | null
           updated_at: string
           website: string | null
           website_visible: boolean
@@ -192,6 +193,7 @@ export type Database = {
           note?: string | null
           phone?: string | null
           phone_visible?: boolean
+          public_phone?: string | null
           updated_at?: string
           website?: string | null
           website_visible?: boolean
@@ -206,6 +208,7 @@ export type Database = {
           note?: string | null
           phone?: string | null
           phone_visible?: boolean
+          public_phone?: string | null
           updated_at?: string
           website?: string | null
           website_visible?: boolean

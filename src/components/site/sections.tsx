@@ -668,13 +668,13 @@ export function ContactSection({ data, section }: { data: SiteData; section?: Se
                 </a>
               </li>
             ) : null}
-            {contact?.phone_visible && contact.phone ? (
+            {contact?.public_phone ? (
               <li className="flex items-center gap-3 text-sm">
                 <span className="flex size-9 items-center justify-center rounded-lg bg-accent text-accent-foreground">
                   <Phone className="size-4" aria-hidden />
                 </span>
-                <a className="hover:text-primary" href={`tel:${contact.phone}`}>
-                  {contact.phone}
+                <a className="hover:text-primary" href={`tel:${contact.public_phone}`}>
+                  {contact.public_phone}
                 </a>
               </li>
             ) : null}
