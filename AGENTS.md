@@ -16,3 +16,4 @@
 - Admin UI is generic: collections are declared in `src/lib/admin-collections.ts` and rendered by `CollectionManager`/`SingletonEditor`, so new content types need config only.
 - The `media` storage bucket is private; files are served through `src/routes/api/public/media/$.ts` so uploads never require a public bucket.
 - Public reads of profile/site_settings/contact_info use explicit column lists (anon has column-level grants; phone/contact_email hidden, contact phone exposed via generated `public_phone`) so private fields never leave the database.
+- Admin activity is recorded by DB triggers on content tables plus the log_admin_event() RPC for account events, so logging can't be bypassed by the UI.

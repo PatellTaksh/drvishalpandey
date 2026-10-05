@@ -18,6 +18,7 @@ import { ThemeToggle } from "@/components/site/ThemeToggle";
 import { AdminLogin } from "@/components/admin/AdminLogin";
 import { COLLECTIONS } from "@/lib/admin-collections";
 import { getAdminSession } from "@/lib/admin.functions";
+import { logAccountEvent } from "@/lib/activity";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
@@ -63,6 +64,7 @@ function AdminLayout() {
   });
 
   async function signOut() {
+    if (session?.isAdmin) await logAccountEvent("sign_out");
     await queryClient.cancelQueries();
     queryClient.clear();
     await supabase.auth.signOut();
@@ -107,6 +109,7 @@ function AdminLayout() {
   const links = [
     { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
     { to: "/admin/messages", label: "Messages", icon: Inbox },
+    { to: "/admin/activity", label: "Activity log", icon: FileText },
   ] as const;
 
   const tail = [

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { bootstrapAdmin, getBootstrapState } from "@/lib/admin-bootstrap.functions";
+import { logAccountEvent } from "@/lib/activity";
 
 export function AdminLogin({ onSignedIn }: { onSignedIn: () => void }) {
   const bootstrap = useServerFn(bootstrapAdmin);
@@ -31,6 +32,7 @@ export function AdminLogin({ onSignedIn }: { onSignedIn: () => void }) {
       }
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
+      await logAccountEvent("sign_in");
       onSignedIn();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Sign in failed.");

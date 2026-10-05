@@ -95,6 +95,39 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_activity: {
+        Row: {
+          action: string
+          actor_email: string | null
+          actor_id: string | null
+          created_at: string
+          entity: string | null
+          entity_id: string | null
+          id: string
+          summary: string | null
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          entity?: string | null
+          entity_id?: string | null
+          id?: string
+          summary?: string | null
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          entity?: string | null
+          entity_id?: string | null
+          id?: string
+          summary?: string | null
+        }
+        Relationships: []
+      }
       admins: {
         Row: {
           created_at: string
@@ -841,6 +874,10 @@ export type Database = {
     }
     Functions: {
       is_admin: { Args: never; Returns: boolean }
+      log_admin_event: {
+        Args: { _action: string; _summary?: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
