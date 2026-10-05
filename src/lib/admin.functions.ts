@@ -225,3 +225,30 @@ export const createUploadUrl = createServerFn({ method: "POST" })
       return { uploadUrl: signed.signedUrl, token: signed.token, path };
     },
   );
+
+export type ActivityEntry = {
+  id: string;
+  created_at: string;
+  actor_email: string | null;
+  action: string;
+  entity: string | null;
+  summary: string | null;
+};
+
+/** Most recent admin activity (sign-ins and content changes). */
+export const listActivity = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { limit?: number }) =>
+    z.object({ limit: z.number().int().min(1).max(500).default(200) }).parse(input ?? {}),
+  )
+  .handler(async ({ data, context }): Promise<ActivityEntry[]> => {
+    const supabase = context.supabase as any;
+    await assertAdmin(supabase);
+    const { data: rows, error } = await supabase
+      .from("admin_activity")
+      .select("id,created_at,actor_email,action,entity,summary")
+      .order("created_at", { ascending: false })
+      .limit(data.limit);
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
