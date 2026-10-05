@@ -878,6 +878,9 @@ export type Database = {
         Args: { _action: string; _summary?: string }
         Returns: undefined
       }
+      public_contact_info_id: { Args: never; Returns: string }
+      public_profile_id: { Args: never; Returns: string }
+      public_site_settings_id: { Args: never; Returns: string }
     }
     Enums: {
       [_ in never]: never
