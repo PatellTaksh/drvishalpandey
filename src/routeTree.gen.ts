@@ -14,6 +14,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAccountRouteImport } from './routes/admin.account'
+import { Route as AdminActivityRouteImport } from './routes/admin.activity'
 import { Route as AdminContactRouteImport } from './routes/admin.contact'
 import { Route as AdminMessagesRouteImport } from './routes/admin.messages'
 import { Route as AdminProfileRouteImport } from './routes/admin.profile'
@@ -45,6 +46,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const AdminAccountRoute = AdminAccountRouteImport.update({
   id: '/account',
   path: '/account',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminActivityRoute = AdminActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminContactRoute = AdminContactRouteImport.update({
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
   '/admin/account': typeof AdminAccountRoute
+  '/admin/activity': typeof AdminActivityRoute
   '/admin/contact': typeof AdminContactRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/profile': typeof AdminProfileRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin/account': typeof AdminAccountRoute
+  '/admin/activity': typeof AdminActivityRoute
   '/admin/contact': typeof AdminContactRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/profile': typeof AdminProfileRoute
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
   '/admin/account': typeof AdminAccountRoute
+  '/admin/activity': typeof AdminActivityRoute
   '/admin/contact': typeof AdminContactRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/profile': typeof AdminProfileRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/reset-password'
     | '/admin/account'
+    | '/admin/activity'
     | '/admin/contact'
     | '/admin/messages'
     | '/admin/profile'
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
     | '/'
     | '/reset-password'
     | '/admin/account'
+    | '/admin/activity'
     | '/admin/contact'
     | '/admin/messages'
     | '/admin/profile'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/reset-password'
     | '/admin/account'
+    | '/admin/activity'
     | '/admin/contact'
     | '/admin/messages'
     | '/admin/profile'
@@ -212,6 +224,13 @@ declare module '@tanstack/react-router' {
       path: '/account'
       fullPath: '/admin/account'
       preLoaderRoute: typeof AdminAccountRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/activity': {
+      id: '/admin/activity'
+      path: '/activity'
+      fullPath: '/admin/activity'
+      preLoaderRoute: typeof AdminActivityRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/contact': {
@@ -268,6 +287,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAccountRoute: typeof AdminAccountRoute
+  AdminActivityRoute: typeof AdminActivityRoute
   AdminContactRoute: typeof AdminContactRoute
   AdminMessagesRoute: typeof AdminMessagesRoute
   AdminProfileRoute: typeof AdminProfileRoute
@@ -278,6 +298,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAccountRoute: AdminAccountRoute,
+  AdminActivityRoute: AdminActivityRoute,
   AdminContactRoute: AdminContactRoute,
   AdminMessagesRoute: AdminMessagesRoute,
   AdminProfileRoute: AdminProfileRoute,

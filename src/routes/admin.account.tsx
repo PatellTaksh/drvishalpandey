@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { getAdminSession } from "@/lib/admin.functions";
+import { logAccountEvent } from "@/lib/activity";
 
 export const Route = createFileRoute("/admin/account")({
   component: Account,
@@ -42,6 +43,7 @@ function Account() {
       toast.error(error.message);
       return;
     }
+    void logAccountEvent("password_change");
     setCurrent("");
     setNext("");
     setConfirm("");
